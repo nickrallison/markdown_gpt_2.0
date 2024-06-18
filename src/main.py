@@ -41,11 +41,11 @@ if __name__ == '__main__':
     input_file = sys.argv[2]
     prompt = sys.argv[3]
 
-    input_file = os.path.join(vault_path, input_file)
+    input_file_path = os.path.join(vault_path, input_file)
     prompt = os.path.join(vault_path, prompt)
 
     # Read the input file
-    with open(input_file, "r") as f:
+    with open(input_file_path, "r") as f:
         input_file_contents = f.read()
 
     # Read the prompt file
