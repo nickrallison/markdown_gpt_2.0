@@ -54,16 +54,27 @@ if __name__ == '__main__':
 
     system_prompt = re.search(r"```system([\s\S]*?)```", prompt_contents).group(1)
     user_prompt = re.search(r"```user([\s\S]*?)```", prompt_contents).group(1)
+    title_prompt = re.search(r"```title_gpt([\s\S]*?)```", prompt_contents).group(1)
 
     system_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, system_prompt)
     user_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, user_prompt)
+    title_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, title_prompt)
+
+    title = fill_with_gpt(system_prompt, title_prompt)
 
     response = fill_with_gpt(system_prompt, user_prompt)
     response = add_yaml(response, input_file)
-    title = re.search(r"# (.*)", response).group(1) + ".md"
-    with open(os.path.join(vault_path, "500-Zettelkasten", title), "w") as f:
-        f.write(response)
-    print(f"Created file 500-Zettelkasten/{title}")
+
+    same_file = re.search(r"same-file: (.*)", prompt_contents).group(1)
+    assert same_file in ["true", "false"], "same-file must be either true or false"
+    if same_file == "true":
+        with open(input_file_path, "w") as f:
+            f.write(response)
+        print(f"Updated file {input_file}")
+    else:
+        with open(os.path.join(vault_path, title), "w") as f:
+            f.write(response)
+        print(f"Created file {title}")
 
 
 
