@@ -56,16 +56,25 @@ if __name__ == '__main__':
     user_prompt = re.search(r"```user([\s\S]*?)```", prompt_contents).group(1)
     title_prompt = re.search(r"```title_gpt([\s\S]*?)```", prompt_contents).group(1)
 
+
+
     system_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, system_prompt)
     user_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, user_prompt)
     title_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, title_prompt)
 
     title = fill_with_gpt(system_prompt, title_prompt)
+
+    system_prompt = re.sub(r'\[title\]', title, system_prompt)
+    user_prompt = re.sub(r'\[title\]', title, user_prompt)
+    title_prompt = re.sub(r'\[title\]', title, title_prompt)
+
     if not title.endswith(".md"):
-        title += ".md"
+        title_file = title + ".md"
+    else:
+        title_file = title
 
     response = fill_with_gpt(system_prompt, user_prompt)
-    response = re.sub(r"# (.*)", f"# {title}", response)
+    response = re.sub(r"^# (.*)", f"# {title}", response)
     response = add_yaml(response, input_file)
 
     if not title.endswith(".md"):
