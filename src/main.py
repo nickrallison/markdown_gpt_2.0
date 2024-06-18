@@ -34,6 +34,13 @@ source: {source}
 ---"""
     return yaml + "\n" + file_contents
 
+def add_link(file_contents, source, title):
+    link = f"""---
+Refer to this note for more information: [[{source}|{title}]]
+"""
+    return file_contents + "\n\n" + link
+
+
 if __name__ == '__main__':
     assert len(sys.argv) == 4, "Usage: python main.py <input_file> <vault_path> <prompt>"
     assert 'OPENAI_API_KEY' in os.environ, 'Please set the OPENAI_API_KEY environment variable.'
@@ -76,6 +83,7 @@ if __name__ == '__main__':
     response = fill_with_gpt(system_prompt, user_prompt)
     response = re.sub(r"^# (.*)", f"# {title}", response)
     response = add_yaml(response, input_file)
+    response = add_link(response, input_file, title)
 
     if not title.endswith(".md"):
         title += ".md"
