@@ -65,8 +65,8 @@ if __name__ == '__main__':
     response = fill_with_gpt(system_prompt, user_prompt)
     response = add_yaml(response, input_file)
 
-    same_file = re.search(r"same-file: (.*)", prompt_contents).group(1)
-    assert same_file in ["true", "false"], "same-file must be either true or false"
+    same_file = re.search(r"same_file: (.*)", prompt_contents).group(1)
+    assert same_file in ["true", "false"], "same_file must be either true or false"
     if same_file == "true":
         with open(input_file_path, "w") as f:
             f.write(response)
