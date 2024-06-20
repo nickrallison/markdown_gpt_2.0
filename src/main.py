@@ -5,7 +5,7 @@ import re
 import openai
 
 
-def fill_with_gpt(system_prompt, user_prompt, model="gpt-4-turbo"):
+def fill_with_gpt(system_prompt, user_prompt, model="gpt-4-turbo", temperature=0.4):
     openai.api_key = os.environ['OPENAI_API_KEY']
 
     response = openai.chat.completions.create(
@@ -34,9 +34,9 @@ source: {source}
 ---"""
     return yaml + "\n" + file_contents
 
-def add_link(file_contents, source, title):
+def add_link(file_contents, source):
     link = f"""---
-Refer to this note for more information: [[{source}|{title}]]
+Refer to this note for more information: [[{source}]]
 """
     return file_contents + "\n\n" + link
 
@@ -59,34 +59,43 @@ if __name__ == '__main__':
     with open(prompt, "r") as f:
         prompt_contents = f.read()
 
+    temperature = re.search(r"temperature: \"(.+?)\"", prompt_contents)
+    if temperature:
+        temperature = float(temperature.group(1))
+    else:
+        temperature = 0.4
+
     system_prompt = re.search(r"```system([\s\S]*?)```", prompt_contents).group(1)
     user_prompt = re.search(r"```user([\s\S]*?)```", prompt_contents).group(1)
     title_prompt = re.search(r"```title_gpt([\s\S]*?)```", prompt_contents).group(1)
-
-
 
     system_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, system_prompt)
     user_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, user_prompt)
     title_prompt = re.sub(r'\[current-file-contents\]', input_file_contents, title_prompt)
 
-    title = fill_with_gpt(system_prompt, title_prompt)
+    title = fill_with_gpt(system_prompt, title_prompt, temperature=temperature)
 
     system_prompt = re.sub(r'\[title\]', title, system_prompt)
     user_prompt = re.sub(r'\[title\]', title, user_prompt)
     title_prompt = re.sub(r'\[title\]', title, title_prompt)
+
+    title = re.sub(r"[^a-zA-Z0-9',.: ]", "", title)
 
     if not title.endswith(".md"):
         title_file = title + ".md"
     else:
         title_file = title
 
-    response = fill_with_gpt(system_prompt, user_prompt)
+    response = fill_with_gpt(system_prompt, user_prompt, temperature=temperature)
     response = re.sub(r"^# (.*)", f"# {title}", response)
     response = add_yaml(response, input_file)
-    response = add_link(response, input_file, title)
+    response = add_link(response, input_file)
 
-    if not title.endswith(".md"):
-        title += ".md"
+    response = re.sub(r'[‘’‛]', "'", response)
+    response = re.sub(r'[“”‟]', '"', response)
+
+    # if not title.endswith(".md"):
+    #     title += ".md"
 
     same_file = re.search(r"same_file: (.*)", prompt_contents).group(1)
     assert same_file in ["true", "false"], "same_file must be either true or false"
@@ -95,9 +104,9 @@ if __name__ == '__main__':
             f.write(response)
         print(f"Updated file {input_file}")
     else:
-        with open(os.path.join(vault_path, "500-Zettelkasten", title), "w") as f:
+        with open(os.path.join(vault_path, "500-Zettelkasten", title_file), "w") as f:
             f.write(response)
-        print(f"Created file {os.path.join("500-Zettelkasten", title)}")
+        print(f"Created file {os.path.join("500-Zettelkasten", title_file)}")
 
 
 
