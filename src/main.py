@@ -90,6 +90,7 @@ Refer to this note for more information: [[{source}]]
 
 
 if __name__ == '__main__':
+    os.chdir(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     assert len(sys.argv) == 4, "Usage: python main.py <input_file> <vault_path> <prompt>"
     assert 'OPENAI_API_KEY' in os.environ, 'Please set the OPENAI_API_KEY environment variable.'
     vault_path = sys.argv[1]
@@ -153,8 +154,6 @@ if __name__ == '__main__':
     user_prompt = user_prompt.replace("[title]", title)
     title_prompt = title_prompt.replace("[title]", title)
     
-    print(title_prompt)
-    print(f"The title is: {title}")
 
     # title = re.sub(r"\+", "Plus", title)
     title = re.sub(r"[^a-zA-Z0-9',.: ]", "", title)
@@ -179,7 +178,7 @@ if __name__ == '__main__':
 
     with open(os.path.join(vault_path, "50-Notes", "51-Notes", title_file), "w", encoding=encoding) as f:
         f.write(response)
-    print(f"Created file {os.path.join("50-Notes" "51-Notes", title_file)}")
+    print(f"Created file {os.path.join("50-Notes", "51-Notes", title_file)}")
     print(response)
 
 

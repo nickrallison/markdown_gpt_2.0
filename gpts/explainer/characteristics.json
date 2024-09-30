@@ -1,20 +1,20 @@
 {
 
     "title": {
-        "model": "gpt-4o",
+        "model": "chatgpt-4o-latest",
         "temperature": 0.0,
-        "frequency_penalty": 0.2,
+        "frequency_penalty": 0.0,
         "logit_bias": null,
-        "max_tokens": 16,
+        "max_tokens": 32,
         "top_p": 1.0,
         "presence_penalty": 0.0
     },
     "user": {
-        "model": "gpt-4o",
+        "model": "chatgpt-4o-latest",
         "temperature": 0.0,
         "frequency_penalty": 0.0,
         "logit_bias": null,
-        "max_tokens": 16,
+        "max_tokens": 16384,
         "top_p": 1.0,
         "presence_penalty": 0.0
     }
