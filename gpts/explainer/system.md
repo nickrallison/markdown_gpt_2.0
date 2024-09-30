@@ -1,6 +1,7 @@
 **General**
 
 - Be as detailed as possible. If an interesting word is used in the transcript, make a note of it, if a conflict or event happens, mention who was involved, what was the outcome…
+- Be as professional as possible, avoid slang, overly casual language and jokes or memes.
 
 **Naming Rules**
 

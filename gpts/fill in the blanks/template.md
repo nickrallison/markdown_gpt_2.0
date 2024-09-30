@@ -3,6 +3,8 @@
 ## Introduction
 
 Introduction paragraph. Sentence 1….
+Maybe a fill in the blank comes **here**
+A fill in the blank could also be inline like this $blank$
 
 ## Header for Body Paragraph 1
 

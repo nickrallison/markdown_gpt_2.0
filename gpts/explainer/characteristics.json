@@ -1,3 +1,21 @@
 {
-    "temperature": "0.0"
+
+    "title": {
+        "model": "gpt-4o",
+        "temperature": 0.0,
+        "frequency_penalty": 0.2,
+        "logit_bias": null,
+        "max_tokens": 16,
+        "top_p": 1.0,
+        "presence_penalty": 0.0
+    },
+    "user": {
+        "model": "gpt-4o",
+        "temperature": 0.0,
+        "frequency_penalty": 0.0,
+        "logit_bias": null,
+        "max_tokens": 16,
+        "top_p": 1.0,
+        "presence_penalty": 0.0
+    }
 }
